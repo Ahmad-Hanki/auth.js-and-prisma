@@ -1,4 +1,5 @@
 import { GithubSignIn } from "@/components/github-sign-in";
+import { GoogleSignIn } from "@/components/google-sign-in copy";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { auth, signIn } from "@/lib/auth";
@@ -13,12 +14,12 @@ const Page = async () => {
     redirect("/");
   }
 
-
   return (
     <div className="w-full max-w-sm mx-auto space-y-6">
       <h1 className="text-2xl font-bold text-center mb-6">Sign In</h1>
 
       <GithubSignIn />
+      <GoogleSignIn />
 
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
@@ -34,14 +35,14 @@ const Page = async () => {
       {/* Email/Password Sign In */}
       <form
         className="space-y-4"
-        action={async (formData:FormData) => {
+        action={async (formData: FormData) => {
           "use server";
 
           await executeAction({
             actionFn: async () => {
-              await signIn('credentials', formData)
-            }
-          })
+              await signIn("credentials", formData);
+            },
+          });
         }}
       >
         <Input

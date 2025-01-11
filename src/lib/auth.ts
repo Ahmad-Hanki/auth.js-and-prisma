@@ -4,6 +4,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
+import { prisma } from "./prisma";
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   providers: [
@@ -17,10 +18,20 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       },
       async authorize(credentials) {
         // check the information
-        const email = "itxti909@gmail.com";
-        const password = "1234";
-        if (credentials.email === email && credentials.password === password) {
-          return { email, password };
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials.email as string,
+          },
+        });
+        if (!user) {
+          throw new Error("Invalid credentials");
+        }
+
+        if (
+          credentials.email === user.email &&
+          credentials.password === user.password
+        ) {
+          return user;
         }
         throw new Error("Invalid credentials");
       },
